@@ -1,0 +1,5 @@
+weights/**
+.python-version
+**/__pycache__/**
+train.py
+.DS_Store
