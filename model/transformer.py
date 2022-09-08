@@ -30,7 +30,14 @@ class ViT(nn.Module):
         patch_size: tuple of ints, size of patches to divide the image into
         input_dim: int, dimension of input layer
     """
-    def __init__(self, input_shape, n_patches = 7, hidden_dim = 8, n_heads = 2, out_dim = 10) -> None:
+    def __init__(
+        self, 
+        input_shape, 
+        n_patches = 7, 
+        hidden_dim = 8, 
+        n_heads = 2, 
+        out_dim = 10
+        ):
         # Super constructor 
         super(ViT, self).__init__()
 
@@ -92,15 +99,15 @@ class ViT(nn.Module):
         tokens = self.normalization_layer_1(tokens)
 
         # Multi Head Self Attention
-        out = tokens + self.msa(tokens)
+        out_msa = tokens + self.msa(tokens)
 
 
         # Layer Normalization + MLP + residual connection
-        out += self.encoder_mlp(self.normalization_layer_2(out))
+        out_mlp = self.encoder_mlp(self.normalization_layer_2(out_msa))
 
         # Classification head
-        out = self.classification_head(out[:, 0])
-        return out
+        out_clf = self.classification_head(out_mlp[:, 0])
+        return out_clf
 
 
 class MSA(nn.Module):
@@ -130,12 +137,13 @@ class MSA(nn.Module):
                 k_mapping = self.k_mappings[head_index]
                 v_mapping = self.v_mappings[head_index]
 
-                sequence = sequence[:, head_index * self.d_head : (head_index + 1) * self.d_head]
-                q = q_mapping(sequence)
-                k = k_mapping(sequence)
-                v = v_mapping(sequence)
+                seq = sequence[:, head_index * self.d_head : (head_index + 1) * self.d_head]
+                
+                q = q_mapping(seq)
+                k = k_mapping(seq)
+                v = v_mapping(seq)
 
-                attention = self.softmax(torch.matmul(q, k.T) / torch.sqrt(self.d_head))
+                attention = self.softmax(torch.matmul(q, k.T) / np.sqrt(self.d_head))
 
                 seq_results.append(torch.matmul(attention, v))
 

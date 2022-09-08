@@ -3,19 +3,24 @@ import argparse
 import torch 
 from torch.optim import Adam
 from torch.nn import CrossEntropyLoss
+from torchsummary import summary
 
 from utils import load_dataset
 from model.transformer import ViT 
+
+torch.autograd.set_detect_anomaly(True)
 
 def get_args():
     parser = argparse.ArgumentParser()
     parser.add_argument('--n-patches', type=int, default=7)
     parser.add_argument('--hidden-dim', type=int, default=16)
     parser.add_argument("--epochs", type=int, default=10)
-    parser.add_argument("--batch_size", type=int, default=8)
+    parser.add_argument("--batch-size", type=int, default=8)
     parser.add_argument("--lr", type=float, default=1e-3)
-    parser.add_argument("--weight_decay", type=float, default=1e-4)
-    parser.add_argument("--save_path", type=str, default="weights/vit.pt")
+    parser.add_argument("--save-path", type=str, default="weights/vit.pt")
+    parser.add_argument("--n-classes", type=int, default=10)
+    parser.add_argument("--n-heads", type=int, default=2)
+    parser.add_argument("--weight-decay", type=float, default=1e-4)
     parser.add_argument("--device", type=str, default="cpu")
     return parser.parse_args()
 
@@ -66,21 +71,26 @@ def save_model(model, path="weights/vit.pt"):
     torch.save(model.state_dict(), path)
 
 if __name__ == '__main__':
-    # Load MNIST dataset into DataLoader
-    # train_load, test_load = load_dataset() 
-
     # Get arguments
     opt = get_args()
+
+    # Load MNIST dataset into DataLoader
+    train_load, test_load = load_dataset(opt.batch_size) 
+
 
     # Load model
     model = ViT(
         input_shape=(1, 28, 28),
         n_patches=opt.n_patches,
-        hidden_dim=opt.hidden_dim
+        hidden_dim=opt.hidden_dim,
+        n_heads=opt.n_heads,
+        out_dim=opt.n_classes
     )
+
+    print(summary(model, (1, 28, 28)))
     x = torch.randn(8, 1, 28, 28)
     y = model(x)
     print(y.shape)
 
     # Train model
-    # train(opt, model, train_load, test_load)
+    train(opt, model, train_load, test_load)
