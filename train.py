@@ -47,7 +47,6 @@ def train(opt, model, train_loader, test_loader):
             optimizer.zero_grad()
             loss.backward()
             optimizer.step()
-        print(f'Epoch: {epoch+1}/{opt.epochs},')
         test_correct, test_total = 0, 0 
         test_loss = 0.0
         for batch in test_loader:
@@ -67,6 +66,9 @@ def train(opt, model, train_loader, test_loader):
         print(f'Epoch: {epoch+1}/{opt.epochs}, Train Loss: {train_loss}, Train Accuracy: {correct/total*100:.2f}%,  \
             Test Loss: {test_loss}, Accuracy: {test_correct/test_total*100:.2f}%')
         
+        save_model(model)
+
+
 def save_model(model, path="weights/vit.pt"):
     torch.save(model.state_dict(), path)
 
@@ -77,6 +79,7 @@ if __name__ == '__main__':
     # Load MNIST dataset into DataLoader
     train_load, test_load = load_dataset(opt.batch_size) 
 
+    print(len(train_load), len(test_load))
 
     # Load model
     model = ViT(
@@ -85,12 +88,9 @@ if __name__ == '__main__':
         hidden_dim=opt.hidden_dim,
         n_heads=opt.n_heads,
         out_dim=opt.n_classes
-    )
+    ).to(opt.device)
 
     print(summary(model, (1, 28, 28)))
-    x = torch.randn(8, 1, 28, 28)
-    y = model(x)
-    print(y.shape)
 
     # Train model
     train(opt, model, train_load, test_load)
