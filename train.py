@@ -79,8 +79,6 @@ if __name__ == '__main__':
     # Load MNIST dataset into DataLoader
     train_load, test_load = load_dataset(opt.batch_size) 
 
-    print(len(train_load), len(test_load))
-
     # Load model
     model = ViT(
         input_shape=(1, 28, 28),
@@ -88,7 +86,7 @@ if __name__ == '__main__':
         hidden_dim=opt.hidden_dim,
         n_heads=opt.n_heads,
         out_dim=opt.n_classes
-    ).to(opt.device)
+    )
 
     print(summary(model, (1, 28, 28)))
 
