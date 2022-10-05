@@ -66,7 +66,8 @@ def train(opt, model, train_loader, test_loader):
         print(f'Epoch: {epoch+1}/{opt.epochs}, Train Loss: {train_loss}, Train Accuracy: {correct/total*100:.2f}%,  \
             Test Loss: {test_loss}, Accuracy: {test_correct/test_total*100:.2f}%')
         
-        save_model(model)
+    model_name = f"wieghts/vit_{opt.n_patches}_{opt.hidden_dim}_{opt.n_heads}_{opt.epochs}.pt"
+    save_model(model, model_name)
 
 
 def save_model(model, path="weights/vit.pt"):
