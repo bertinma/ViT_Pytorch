@@ -21,6 +21,7 @@ def get_args():
     parser.add_argument("--n-classes", type=int, default=10)
     parser.add_argument("--n-heads", type=int, default=2)
     parser.add_argument("--device", type=str, default="cpu")
+    parser.add_argument("--n-samples", type=int, default=10)
     return parser.parse_args()
 
 def load_model(model, path):
@@ -28,8 +29,9 @@ def load_model(model, path):
     return model
 
 def diplay_result(x, y, y_pred):
-    plt.imshow(torch.permute(x[0], (1, 2, 0)))
-    plt.title(f"Actual: {y}, Predicted: {y_pred}")
+    plt.imshow(torch.permute(x[0], (1, 2, 0)), cmap='gray')
+    plt.axis('off')
+    plt.title(f"Actual: {y.item()}, Predicted: {y_pred.item()}")
     plt.show()
 
 def eval(opt, model, test_loader):
@@ -38,8 +40,10 @@ def eval(opt, model, test_loader):
     ys = []
     y_preds = []
     test_correct, test_loss, test_total = 0, 0, 0
+    cnt = 0
     with torch.no_grad():
         for batch in test_loader:
+            cnt += 1 
             x, y = batch
             x = x.to(opt.device)
             y = y.to(opt.device)
@@ -54,6 +58,8 @@ def eval(opt, model, test_loader):
             xs.append(x)
             ys.append(y)
             y_preds.append(torch.argmax(y_hat.data, dim=1))
+            if cnt == opt.n_samples:
+                break
 
     print(f'Test Loss: {test_loss}, Accuracy: {test_correct/test_total*100:.2f}%')
     return xs, ys, y_preds
