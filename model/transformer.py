@@ -121,9 +121,9 @@ class MSA(nn.Module):
 
         self.d_head = int(self.hidden_dim // n_heads)
 
-        self.q_mappings = [nn.Linear(self.d_head, self.d_head) for _ in range(self.n_heads)]
-        self.k_mappings = [nn.Linear(self.d_head, self.d_head) for _ in range(self.n_heads)]
-        self.v_mappings = [nn.Linear(self.d_head, self.d_head) for _ in range(self.n_heads)]
+        self.q_mappings = nn.ModuleList([nn.Linear(self.d_head, self.d_head) for _ in range(self.n_heads)])
+        self.k_mappings = nn.ModuleList([nn.Linear(self.d_head, self.d_head) for _ in range(self.n_heads)])
+        self.v_mappings = nn.ModuleList([nn.Linear(self.d_head, self.d_head) for _ in range(self.n_heads)])
 
         self.softmax = nn.Softmax(dim = -1)
 
