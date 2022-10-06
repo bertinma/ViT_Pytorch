@@ -1,5 +1,5 @@
 import argparse
-
+from tqdm import tqdm, trange
 import torch 
 from torch.optim import Adam
 from torch.nn import CrossEntropyLoss
@@ -29,10 +29,10 @@ def train(opt, model, train_loader, test_loader):
     optimizer = Adam(model.parameters(), lr=opt.lr, weight_decay=opt.weight_decay)
     criterion = CrossEntropyLoss()
 
-    for epoch in range(opt.epochs):
+    for epoch in trange(opt.epochs, desc = "Training"):
         train_loss = 0.0
         correct, total = 0, 0 
-        for batch in train_loader:
+        for batch in tqdm(train_loader, desc=f"Epoch {epoch + 1} in training", leave=False):
             x, y = batch
             x = x.to(opt.device)
             y = y.to(opt.device)
@@ -47,26 +47,27 @@ def train(opt, model, train_loader, test_loader):
             optimizer.zero_grad()
             loss.backward()
             optimizer.step()
+        
+        
+        print(f'\nEpoch: {epoch+1}/{opt.epochs}, Train Loss: {train_loss}, Train Accuracy: {correct/total*100:.2f}%')
         test_correct, test_total = 0, 0 
         test_loss = 0.0
-        for batch in test_loader:
-            x, y = batch
-            x = x.to(opt.device)
-            y = y.to(opt.device)
+        with torch.no_grad():
+            for batch in tqdm(test_loader, desc='Testing', leave=False):
+                x, y = batch
+                x = x.to(opt.device)
+                y = y.to(opt.device)
 
-            y_hat = model(x)
-            loss = criterion(y_hat, y) / len(x)
-            test_loss += loss.item()
+                y_hat = model(x)
+                loss = criterion(y_hat, y) / len(x)
+                test_loss += loss.item()
 
+                test_total += len(x)
+                test_correct += torch.sum((torch.argmax(y_hat.data, dim=1) == y)).item()
 
-
-            test_total += len(x)
-            test_correct += torch.sum((torch.argmax(y_hat.data, dim=1) == y)).item()
-
-        print(f'Epoch: {epoch+1}/{opt.epochs}, Train Loss: {train_loss}, Train Accuracy: {correct/total*100:.2f}%,  \
-            Test Loss: {test_loss}, Accuracy: {test_correct/test_total*100:.2f}%')
+        print(f'\nTest Loss: {test_loss}, Accuracy: {test_correct/test_total*100:.2f}%')
         
-    model_name = f"wieghts/vit_{opt.n_patches}_{opt.hidden_dim}_{opt.n_heads}_{opt.epochs}.pt"
+    model_name = f"weights/vit_{opt.n_patches}_{opt.hidden_dim}_{opt.n_heads}_{opt.epochs}.pt"
     save_model(model, model_name)
 
 
