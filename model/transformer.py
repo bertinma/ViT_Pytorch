@@ -76,7 +76,8 @@ class ViT(nn.Module):
     
         # Classification head
         self.classification_head = nn.Sequential(
-            nn.Linear(self.hidden_dim, out_dim), 
+            nn.Linear(self.hidden_dim, 32), 
+            nn.Linear(32, out_dim), 
             nn.Softmax(dim=-1)
         )
 
