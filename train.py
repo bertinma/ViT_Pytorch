@@ -1,5 +1,7 @@
 import argparse
 from tqdm import tqdm, trange
+import logging as logging
+
 import torch 
 from torch.optim import Adam
 from torch.nn import CrossEntropyLoss
@@ -8,8 +10,11 @@ from torchsummary import summary
 from utils import load_dataset
 from model.transformer import ViT 
 
+# -------------------------------------------------------------------
 torch.autograd.set_detect_anomaly(True)
+logging.basicConfig(level=logging.DEBUG, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s', datefmt='%d/%m/%Y %H:%M:%S')
 
+# -------------------------------------------------------------------
 def get_args():
     parser = argparse.ArgumentParser()
     parser.add_argument('--n-patches', type=int, default=7)
@@ -49,7 +54,8 @@ def train(opt, model, train_loader, test_loader):
             optimizer.step()
         
         
-        print(f'\nEpoch: {epoch+1}/{opt.epochs}, Train Loss: {train_loss}, Train Accuracy: {correct/total*100:.2f}%')
+        # print(f'\nEpoch: {epoch+1}/{opt.epochs}, Train Loss: {train_loss}, Train Accuracy: {correct/total*100:.2f}%')
+        logging.info(f'\nEpoch: {epoch+1}/{opt.epochs}, Train Loss: {train_loss}, Train Accuracy: {correct/total*100:.2f}%')
         test_correct, test_total = 0, 0 
         test_loss = 0.0
         with torch.no_grad():
@@ -68,6 +74,9 @@ def train(opt, model, train_loader, test_loader):
         print(f'\nTest Loss: {test_loss}, Accuracy: {test_correct/test_total*100:.2f}% \
             \n\n--------------------------------------------------------------------')
         
+        logging.info(f'\nTest Loss: {test_loss}, Accuracy: {test_correct/test_total*100:.2f}% \
+            \n\n--------------------------------------------------------------------')
+        
     model_name = f"weights/vit_{opt.n_patches}_{opt.hidden_dim}_{opt.n_heads}_{opt.epochs}.pt"
     save_model(model, model_name)
 
@@ -81,6 +90,7 @@ if __name__ == '__main__':
 
     # Load MNIST dataset into DataLoader
     train_load, test_load = load_dataset(opt.batch_size) 
+    logging.info("Dataset loaded\n")
 
     # Load model
     model = ViT(
@@ -90,8 +100,9 @@ if __name__ == '__main__':
         n_heads=opt.n_heads,
         out_dim=opt.n_classes
     )
-
-    print(summary(model, (1, 28, 28)))
+    logging.info("Model loaded\n")
+    summary(model, (1, 28, 28))
 
     # Train model
+    logging.info("Training model\n")
     train(opt, model, train_load, test_load)
