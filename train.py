@@ -25,6 +25,7 @@ def get_args():
     parser.add_argument("--save-path", type=str, default="weights/vit.pt")
     parser.add_argument("--n-classes", type=int, default=10)
     parser.add_argument("--n-heads", type=int, default=2)
+    parser.add_argument("--n-blocks", type=int, default=1)
     parser.add_argument("--weight-decay", type=float, default=1e-4)
     parser.add_argument("--device", type=str, default="cpu")
     return parser.parse_args()
@@ -70,9 +71,6 @@ def train(opt, model, train_loader, test_loader):
 
                 test_total += len(x)
                 test_correct += torch.sum((torch.argmax(y_hat.data, dim=1) == y)).item()
-
-        print(f'\nTest Loss: {test_loss}, Accuracy: {test_correct/test_total*100:.2f}% \
-            \n\n--------------------------------------------------------------------')
         
         logging.info(f'\nTest Loss: {test_loss}, Accuracy: {test_correct/test_total*100:.2f}% \
             \n\n--------------------------------------------------------------------')
@@ -98,7 +96,8 @@ if __name__ == '__main__':
         n_patches=opt.n_patches,
         hidden_dim=opt.hidden_dim,
         n_heads=opt.n_heads,
-        out_dim=opt.n_classes
+        out_dim=opt.n_classes,
+        n_blocks = opt.n_blocks
     )
     logging.info("Model loaded\n")
     summary(model, (1, 28, 28))
