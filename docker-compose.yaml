@@ -1,0 +1,12 @@
+version: "3.7"
+services:
+  vit_mnist:
+    image: vit:0.0.1
+    build: .
+    container_name: vit_mnist
+    stdin_open: true # docker run -i
+    tty: true        # docker run -t
+    user: root
+    volumes:
+      - /Users/mabrtn/Desktop/Formations/Transformers_PyTorch/weights:/app/weights
+      - /Users/mabrtn/Desktop/Formations/Transformers_PyTorch/datasets:/app/datasets

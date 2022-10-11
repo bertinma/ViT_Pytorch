@@ -31,24 +31,36 @@ We use MNIST Fashion dataset
 ## Training
 To train the model
 ### Localy 
-run the following command : 
-```bash
-python train.py --hidden-dim 8 --n-patches 7 --epochs 5 --batch-size 16  --n-heads 1 --dropout 0.1 --lr 0.001 --weight-decay 0.0001 --n-classes 10 --device cpu
-```
+Install following dependencies : 
+- torch==1.12.1
+- torchsummary==1.5.1
+- torchvision==0.13.1
+- numpy==1.21.5
+- matplotlib==3.5.1
+- tqdm==4.64.1
+
+
 ### Using Docker 
 ```bash
 docker build -t vit_mnist:1.0.0 .
-docker run -it vit_mnist:1.0.0 bash
+docker run -it vit_mnist:1.0.0 -v ./weights:/app/weights -v ./datasets:/app/datasets bash
 ```
-Run the following command in bash shell opened by docker : 
+
+### Using Docker Compose 
+```bash
+docker-compose up -d
+docker-compose exec vit_mnist sh
+
+```
+
+- Run the following command in bash shell opened by docker : 
 ```bash
 python train.py --hidden-dim 8 --n-patches 7 --epochs 5 --batch-size 16  --n-heads 1 --dropout 0.1 --lr 0.001 --weight-decay 0.0001 --n-classes 10 --device cpu
 ```
 
 
-
 ## Results
-The model is trained on 5 epochs with a batch size of 16.
+The model is trained on 20 epochs with a batch size of 16.
 | Patches |Heads | Blocks | Test Accuracy |
 |---------|------|--------|---------------|
 | 7       | 1    | 1      |               |
