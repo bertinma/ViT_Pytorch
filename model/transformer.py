@@ -71,13 +71,17 @@ class ViT(nn.Module):
         # Encoder MLP 
         self.encoder_mlp = nn.Sequential(
             nn.Linear(self.hidden_dim, self.hidden_dim),
-            nn.GELU()
+            nn.GELU(),
+            nn.Dropout(0.1),
+            nn.Linear(self.hidden_dim, self.hidden_dim),
+            nn.GELU(),
+            nn.Dropout(0.1)
         )
     
         # Classification head
         self.classification_head = nn.Sequential(
-            nn.Linear(self.hidden_dim, 32), 
-            nn.Linear(32, out_dim), 
+            nn.Linear(self.hidden_dim, out_dim), 
+            # nn.Linear(32, out_dim), 
             nn.Softmax(dim=-1)
         )
 
@@ -86,7 +90,7 @@ class ViT(nn.Module):
         n, c, w, h = x.shape
         patches = x.reshape(n, self.n_patches ** 2, self.input_dim)
 
-        # Runnnong linear mapper for tokenization 
+        # Runnning linear mapper for tokenization 
         tokens = self.linear_mapper(patches)
 
         # Adding classification token
@@ -152,4 +156,3 @@ class MSA(nn.Module):
 
         # return torch.stack(result)
         return torch.cat([torch.unsqueeze(r, dim=0) for r in result])
-
