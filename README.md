@@ -29,17 +29,30 @@ Classic Transformer architecture as follow :
 We use MNIST Fashion dataset 
 
 ## Training
-To train the model, run the following command : 
+To train the model
+### Localy 
+run the following command : 
+```bash
+python train.py --hidden-dim 8 --n-patches 7 --epochs 5 --batch-size 16  --n-heads 1 --dropout 0.1 --lr 0.001 --weight-decay 0.0001 --n-classes 10 --device cpu
+```
+### Using Docker 
+```bash
+docker build -t vit_mnist:1.0.0 .
+docker run -it vit_mnist:1.0.0 bash
+```
+Run the following command in bash shell opened by docker : 
 ```bash
 python train.py --hidden-dim 8 --n-patches 7 --epochs 5 --batch-size 16  --n-heads 1 --dropout 0.1 --lr 0.001 --weight-decay 0.0001 --n-classes 10 --device cpu
 ```
 
+
+
 ## Results
 The model is trained on 5 epochs with a batch size of 16.
-| Epoch | Train Loss | Train Accuracy | Test Loss | Test Accuracy |
-|-------|------------|----------------|-----------|---------------|
-| 1     | 0.0000     | 0.0000         | 0.0000    | 0.0000        |
-| 2     | 0.0000     | 0.0000         | 0.0000    | 0.0000        |
-| 3     | 0.0000     | 0.0000         | 0.0000    | 0.0000        |
-| 4     | 0.0000     | 0.0000         | 0.0000    | 0.0000        |
-| 5     | 0.0000     | 0.0000         | 0.0000    | 0.0000        |
+| Patches |Heads | Blocks | Test Accuracy |
+|---------|------|--------|---------------|
+| 7       | 1    | 1      |               |
+| 7       | 1    | 2      |               |
+| 7       | 2    | 1      |               |
+| 7       | 2    | 2      |               |
+| 14      | 1    | 1      |               |
