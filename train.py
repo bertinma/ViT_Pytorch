@@ -75,7 +75,7 @@ def train(opt, model, train_loader, test_loader):
         logging.info(f'\nTest Loss: {test_loss}, Accuracy: {test_correct/test_total*100:.2f}% \
             \n\n--------------------------------------------------------------------')
         
-    model_name = f"weights/vit_{opt.n_patches}_{opt.hidden_dim}_{opt.n_heads}_{opt.epochs}.pt"
+    model_name = f"weights/vit_{opt.n_patches}p_{opt.hidden_dim}d_{opt.n_heads}h_{opt.n_blocks}b_{opt.epochs}e.pt"
     save_model(model, model_name)
 
 
