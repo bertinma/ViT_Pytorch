@@ -61,10 +61,12 @@ python train.py --hidden-dim 8 --n-patches 7 --epochs 5 --batch-size 16  --n-hea
 
 ## Results
 The model is trained on 20 epochs with a batch size of 16.
-| Patches |Heads | Blocks | Test Accuracy |
-|---------|------|--------|---------------|
-| 7       | 1    | 1      |               |
-| 7       | 1    | 2      |               |
-| 7       | 2    | 1      |               |
-| 7       | 2    | 2      |               |
-| 14      | 1    | 1      |               |
+| Patches |Heads | Blocks | Test Accuracy | Parameters |
+|---------|------|--------|---------------|------------|
+| 7       | 1    | 1      |    61.20      | 1 242      |
+| 7       | 1    | 2      |    77.04      | 2 258      |
+| 7       | 1    | 4      |    68.80      | 4 290      |
+| 7       | 2    | 1      |               | 1 050      |
+| 7       | 2    | 2      |    35.26      | 1 874      |
+| 7       | 2    | 4      |               |            |
+| 14      | 1    | 1      |    11.35      | 1 146      |
