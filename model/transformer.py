@@ -103,10 +103,15 @@ class ViT(nn.Module):
 
         # Transformer Blocks
         # outs_blocks = torch.Tensor()
+        attention_scores = []
         for block in self.blocks:
             out = block(out)
+            attention_scores.append(block.attention)
 
+        att_mat = torch.stack(attention_scores).squeeze(1)
+        self.att_mat = torch.mean(att_mat, dim=1)
         out = out[:, 0]
+
         return self.mlp(out) # Map to output dimension, output category distribution
         
 class MyViTBlock(nn.Module):
@@ -127,7 +132,8 @@ class MyViTBlock(nn.Module):
     def forward(self, x):
         out = x + self.mhsa(self.norm1(x))
         out = out + self.mlp(self.norm2(out))
-        return out
+        self.attention = self.mhsa.attention
+        return out 
 
 
 
@@ -164,9 +170,9 @@ class MSA(nn.Module):
                 k = k_mapping(seq)
                 v = v_mapping(seq)
 
-                attention = self.softmax(torch.matmul(q, k.T) / np.sqrt(self.d_head))
+                self.attention = self.softmax(torch.matmul(q, k.T) / np.sqrt(self.d_head))
 
-                seq_results.append(torch.matmul(attention, v))
+                seq_results.append(torch.matmul(self.attention, v))
 
             result.append(torch.hstack(seq_results))
 
