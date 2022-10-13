@@ -32,10 +32,13 @@ def get_args():
 
 
 def train(opt, model, train_loader, test_loader):
+    model_name = f"weights/vit_{opt.n_patches}p_{opt.hidden_dim}d_{opt.n_heads}h_{opt.n_blocks}b_{opt.epochs}e.pt"
+
     optimizer = Adam(model.parameters(), lr=opt.lr, weight_decay=opt.weight_decay)
     criterion = CrossEntropyLoss()
 
     for epoch in trange(opt.epochs, desc = "Training"):
+        best_acc = 0.0
         train_loss = 0.0
         correct, total = 0, 0 
         for batch in tqdm(train_loader, desc=f"Epoch {epoch + 1} in training", leave=False):
@@ -71,13 +74,15 @@ def train(opt, model, train_loader, test_loader):
 
                 test_total += len(x)
                 test_correct += torch.sum((torch.argmax(y_hat.data, dim=1) == y)).item()
-        
+            # Save best model 
+            if test_correct/test_total*100 > best_acc:
+                best_acc = test_correct/test_total*100
+                save_model(model, opt.save_path)
+            
+            # Display attnetion of one image
+
         logging.info(f'\nTest Loss: {test_loss}, Accuracy: {test_correct/test_total*100:.2f}% \
             \n\n--------------------------------------------------------------------')
-        
-    model_name = f"weights/vit_{opt.n_patches}p_{opt.hidden_dim}d_{opt.n_heads}h_{opt.n_blocks}b_{opt.epochs}e.pt"
-    save_model(model, model_name)
-
 
 def save_model(model, path="weights/vit.pt"):
     torch.save(model.state_dict(), path)
