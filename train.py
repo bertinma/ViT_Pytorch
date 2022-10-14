@@ -77,7 +77,7 @@ def train(opt, model, train_loader, test_loader):
             # Save best model 
             if test_correct/test_total*100 > best_acc:
                 best_acc = test_correct/test_total*100
-                save_model(model, opt.save_path)
+                save_model(model, model_name)
             
             # Display attnetion of one image
 
