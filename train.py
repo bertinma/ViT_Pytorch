@@ -28,6 +28,7 @@ def get_args():
     parser.add_argument("--n-blocks", type=int, default=1)
     parser.add_argument("--weight-decay", type=float, default=1e-4)
     parser.add_argument("--device", type=str, default="cpu")
+    parser.add_argument("--patience", type=int, default=5)
     return parser.parse_args()
 
 
@@ -37,6 +38,7 @@ def train(opt, model, train_loader, test_loader):
     optimizer = Adam(model.parameters(), lr=opt.lr, weight_decay=opt.weight_decay)
     criterion = CrossEntropyLoss()
 
+    cnt_patience = 0
     for epoch in trange(opt.epochs, desc = "Training"):
         best_acc = 0.0
         train_loss = 0.0
@@ -74,10 +76,16 @@ def train(opt, model, train_loader, test_loader):
 
                 test_total += len(x)
                 test_correct += torch.sum((torch.argmax(y_hat.data, dim=1) == y)).item()
-            # Save best model 
-            if test_correct/test_total*100 > best_acc:
-                best_acc = test_correct/test_total*100
-                save_model(model, model_name)
+        # Save best model 
+        if test_correct/test_total*100 > best_acc:
+            best_acc = test_correct/test_total*100
+            save_model(model, model_name)
+            cnt_patience = 0
+        else:
+            cnt_patience += 1
+            if cnt_patience == opt.patience:
+                logging.info(f"Early stopping at epoch {epoch + 1}")
+                break
             
             # Display attnetion of one image
 
