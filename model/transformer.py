@@ -170,11 +170,10 @@ class MSA(nn.Module):
                 k = k_mapping(seq)
                 v = v_mapping(seq)
 
-                self.attention = self.softmax(torch.matmul(q, k.T) / np.sqrt(self.d_head))
+                self.attention = self.softmax(torch.matmul(q, k.transpose(0, 1)) / np.sqrt(self.d_head))
 
                 seq_results.append(torch.matmul(self.attention, v))
-
-            result.append(torch.hstack(seq_results))
-
+            result.append(torch.cat(seq_results, 1))
+    
         # return torch.stack(result)
         return torch.cat([torch.unsqueeze(r, dim=0) for r in result])
