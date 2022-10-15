@@ -70,10 +70,24 @@ The model is trained on 20 epochs with a batch size of 16.
 | 7       | 8          | 2     | 2      |    35.26      | 1 874      |
 | 7       | 8          | 2     | 4      |    64.71      | 3 522      |
 | 14      | 8          | 1     | 1      |    11.35      | 1 146      |
-| 7       | 16         | 1     | 1      |          |       |
-| 7       | 16         | 1     | 2      |          |       |
-| 7       | 16         | 1     | 4      |          |       |
-| 7       | 16         | 2     | 1      |          |       |
-| 7       | 16         | 2     | 2      |          |       |
-| 7       | 16         | 2     | 4      |          |       |
-| 14      | 16         | 1     | 1      |          |       |
+| 7       | 16         | 1     | 2      |    89.57      | 8 090      |
+| 7       | 16         | 1     | 4      |    91.92      | 15 738     |
+| 7       | 16         | 2     | 4      |    91.92      | 12 666     |
+| 7       | 32         | 1     | 4      |    91.36      | 60 138     |
+
+
+We saw that more hidden dims and more blocks lead to better results.
+I chose the model with better accuracy and less parameters.
+
+Trained best model on 100 epochs with a batch size of 16.
+
+| Patches |Hidden Dims | Heads | Blocks | Test Accuracy | Parameters |
+|---------|------------|-------|--------|---------------|------------|
+| 7       | 16         | 2     | 4      |  92.87        | 12 666     |
+
+## Inference using ONN format 
+To convert the model to ONNX format, run the following command : 
+```bash
+python export_onnx.py --hidden-dim 16 --n-patches 7 --n-blocks 4 --n-heads 2 --n-classes 10 --model-path ./weights/vit_7p_16d_2h_4b_20e.pt
+```
+
