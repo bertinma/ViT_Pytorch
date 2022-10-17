@@ -21,6 +21,8 @@ def get_args():
     parser.add_argument("--n-classes", type=int, default=10)
     parser.add_argument("--n-heads", type=int, default=2)
     parser.add_argument("--device", type=str, default="cpu")
+    parser.add_argument("--n-blocks", type=int, default=1)
+    parser.add_argument('--display', action='store_true')
     parser.add_argument("--n-samples", type=int, default=10)
     return parser.parse_args()
 
@@ -78,17 +80,19 @@ if __name__ == '__main__':
         n_patches=opt.n_patches,
         hidden_dim=opt.hidden_dim,
         n_heads=opt.n_heads,
-        out_dim=opt.n_classes
+        out_dim=opt.n_classes,
+        n_blocks=opt.n_blocks
     )
 
     model = load_model(model, opt.model_path)
 
-    print(summary(model, (1, 28, 28)))
+    summary(model, (1, 28, 28))
 
     # Eval model
     xs, ys, y_preds = eval(opt, model, test_load)
 
     # Display results
-    for x, y, y_pred in zip(xs, ys, y_preds):
-        diplay_result(x, y, y_pred)
+    if opt.display:
+        for x, y, y_pred in zip(xs, ys, y_preds):
+            diplay_result(x, y, y_pred)
         # plt.show()
