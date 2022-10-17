@@ -15,6 +15,7 @@ def get_args():
     parser.add_argument("--n-heads", type=int, default=2)
     parser.add_argument("--device", type=str, default="cpu")
     parser.add_argument("--n-samples", type=int, default=10)
+    parser.add_argument('--format', type=str, default='onnx', choices=['onnx'])
     return parser.parse_args()
 
 def load_model(model, path):
@@ -31,7 +32,8 @@ if __name__ == '__main__':
         n_patches=opt.n_patches,
         hidden_dim=opt.hidden_dim,
         n_heads=opt.n_heads,
-        out_dim=opt.n_classes
+        out_dim=opt.n_classes,
+        n_blocks=opt.n_blocks
     )
     # Evaluate the model to switch some operations from training mode to inference.
     model.eval()
@@ -44,4 +46,5 @@ if __name__ == '__main__':
 
     model_name = Path(opt.model_path).stem
     # Call the export function
-    torch.onnx.export(model, (dummy_input, ), f'weights/onnx/{model_name}.onnx')
+    if opt.format == 'onnx':
+        torch.onnx.export(model, (dummy_input, ), f'weights/onnx/{model_name}.onnx')
