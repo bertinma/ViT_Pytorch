@@ -85,7 +85,7 @@ Trained best model on 100 epochs with a batch size of 16.
 |---------|------------|-------|--------|---------------|------------|
 | 7       | 16         | 2     | 4      |  92.87        | 12 666     |
 
-## Inference using ONN format 
+## Inference using ONNX format 
 To convert the model to ONNX format, run the following command : 
 ```bash
 python export_onnx.py --hidden-dim 16 --n-patches 7 --n-blocks 4 --n-heads 2 --n-classes 10 --model-path ./weights/vit_7p_16d_2h_4b_20e.pt

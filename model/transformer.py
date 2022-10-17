@@ -159,10 +159,7 @@ class MSA(nn.Module):
 
         for sequence in sequences:
             seq_results = []
-            for head_index in range(self.n_heads):
-                q_mapping = self.q_mappings[head_index]
-                k_mapping = self.k_mappings[head_index]
-                v_mapping = self.v_mappings[head_index]
+            for head_index, (q_mapping, k_mapping, v_mapping) in enumerate(zip(self.q_mappings, self.k_mappings, self.v_mappings)):
 
                 seq = sequence[:, head_index * self.d_head : (head_index + 1) * self.d_head]
                 
