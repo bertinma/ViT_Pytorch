@@ -33,7 +33,7 @@ def patchify(images, n_patches):
         for i in range(n_patches):
             for j in range(n_patches):
                 patch = image[:, i * patch_size: (i + 1) * patch_size, j * patch_size: (j + 1) * patch_size]
-                patches[idx, i * n_patches + j] = patch.flatten()
+                patches[idx, i * n_patches + j] = torch.Tensor(patch).flatten()
     return patches
 
 
