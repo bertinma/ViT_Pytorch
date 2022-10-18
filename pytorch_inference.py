@@ -73,7 +73,7 @@ if __name__ == '__main__':
     elif args.source == 'camera':
         stream = cv2.VideoCapture(0)
         while True:
-            start_time = time() # We would like to measure the FPS.
+            start_time = time.time() # We would like to measure the FPS.
             ret, frame = stream.read()
             if cv2.waitKey(1) & 0xFF == ord('q'):
                 break
@@ -85,7 +85,7 @@ if __name__ == '__main__':
                 input_image = np.expand_dims(np.expand_dims(frame, axis=0), axis=0)
                 result = vit_classifier_image(frame)
                 prediction = np.argmax(result.detach().numpy(), axis=1)[0]
-                end_time = time()   
+                end_time = time.time()   
                 fps = 1/np.round(end_time - start_time, 3) #Measure the FPS.
                 cv2.putText(frame, str(prediction), (2, 2), cv2.FONT_HERSHEY_SIMPLEX, 1, (255, 255, 255), 1)
                 cv2.putText(frame, str(fps), (2, 24), cv2.FONT_HERSHEY_SIMPLEX, 1, (255, 255, 255), 1)
