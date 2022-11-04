@@ -8,5 +8,5 @@ services:
     tty: true        # docker run -t
     user: root
     volumes:
-      - /Users/mabrtn/Desktop/Formations/Transformers_PyTorch/weights:/app/weights
-      - /Users/mabrtn/Desktop/Formations/Transformers_PyTorch/datasets:/app/datasets
+      - ./weights:/app/weights
+      - ./datasets:/app/datasets
