@@ -49,7 +49,7 @@ def train(opt, model, train_loader, test_loader):
             y = y.to(opt.device)
 
             y_hat = model(x)
-            loss = criterion(y_hat, y) / len(x)
+            loss = criterion(y_hat, y)
             train_loss += loss.item()
 
             total += len(x)
@@ -59,7 +59,7 @@ def train(opt, model, train_loader, test_loader):
             loss.backward()
             optimizer.step()
         
-        
+        train_loss /= len(train_loader)
         # print(f'\nEpoch: {epoch+1}/{opt.epochs}, Train Loss: {train_loss}, Train Accuracy: {correct/total*100:.2f}%')
         logging.info(f'\nEpoch: {epoch+1}/{opt.epochs}, Train Loss: {train_loss}, Train Accuracy: {correct/total*100:.2f}%')
         test_correct, test_total = 0, 0 
@@ -71,11 +71,12 @@ def train(opt, model, train_loader, test_loader):
                 y = y.to(opt.device)
 
                 y_hat = model(x)
-                loss = criterion(y_hat, y) / len(x)
+                loss = criterion(y_hat, y)
                 test_loss += loss.item()
 
                 test_total += len(x)
                 test_correct += torch.sum((torch.argmax(y_hat.data, dim=1) == y)).item()
+        test_loss /= len(test_loader)
         # Save best model 
         if test_correct/test_total*100 > best_acc:
             best_acc = test_correct/test_total*100
