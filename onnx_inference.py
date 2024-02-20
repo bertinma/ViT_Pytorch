@@ -54,16 +54,17 @@ if __name__ == '__main__':
         vit_classifier,
         [
             gr.components.Image(
-                shape=None,
+                height=None,
+                width=None,
                 image_mode="L",  
-                invert_colors=False,
-                source="upload",
-                tool="editor",
+                # invert_colors=False,
+                sources="upload",
+                # tool="editor",
                 type="filepath",
                 label='MNIST Image'),
         ],
         [
-            gr.components.Textbox(type="auto", label='Prediction'),
+            gr.components.Textbox(type="text", label='Prediction'),
         ],
         title=title,
         description=description,
