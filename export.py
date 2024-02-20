@@ -47,4 +47,4 @@ if __name__ == '__main__':
     model_name = Path(opt.model_path).stem
     # Call the export function
     if opt.format == 'onnx':
-        torch.onnx.export(model, (dummy_input, ), f'weights/onnx/{model_name}.onnx')
+        torch.onnx.export(model, (dummy_input, ), f'weights/onnx/{model_name}.onnx', opset_version=11)
