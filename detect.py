@@ -2,7 +2,6 @@ import argparse
 import random 
 import torch 
 from torchsummary import summary
-from icecream import ic 
 
 from utils import load_dataset, compute_attentions, visualize
 from model.transformer import ViT 

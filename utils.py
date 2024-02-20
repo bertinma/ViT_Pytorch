@@ -29,7 +29,6 @@ def load_dataset(batch_size, eval = False):
 def compute_attentions(attention_weights, im):
     attentions = []
     for att_mat in attention_weights:
-        # ic(att_mat.shape, att_mat.size(0))
         residual_att = torch.eye(att_mat.size(0))
         aug_att_mat = att_mat + residual_att
         aug_att_mat = aug_att_mat / aug_att_mat.sum(dim=-1).unsqueeze(-1)
