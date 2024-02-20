@@ -94,7 +94,7 @@ def train(opt, model, train_loader, test_loader):
             \n\n--------------------------------------------------------------------')
 
 def save_model(model, path="weights/vit.pt"):
-    torch.save(model.state_dict(), path)
+    torch.save(model, path)
 
 if __name__ == '__main__':
     # Get arguments
