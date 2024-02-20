@@ -55,7 +55,7 @@ docker-compose exec vit_mnist sh
 
 - Run the following command in bash shell opened by docker : 
 ```bash
-python train.py --hidden-dim 8 --n-patches 7 --epochs 5 --batch-size 16  --n-heads 1 --dropout 0.1 --lr 0.001 --weight-decay 0.0001 --n-classes 10 --device cpu
+python train.py --hidden-dim 8 --n-patches 7 --epochs 5 --batch-size 32  --n-heads 4 --lr 0.001 --weight-decay 0.0001 --n-classes 10 --device mps
 ```
 
 
@@ -88,6 +88,6 @@ Trained best model on 100 epochs with a batch size of 16.
 ## Inference using ONNX format 
 To convert the model to ONNX format, run the following command : 
 ```bash
-python export_onnx.py --hidden-dim 16 --n-patches 7 --n-blocks 4 --n-heads 2 --n-classes 10 --model-path ./weights/vit_7p_16d_2h_4b_20e.pt
+python export.py --hidden-dim 16 --n-patches 7 --n-blocks 4 --n-heads 2 --n-classes 10 --model-path ./weights/vit_7p_16d_2h_4b_20e.pt
 ```
 
